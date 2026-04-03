@@ -14,18 +14,11 @@ if (!process.env.DATABASE_URL) {
     process.exit(1);
 }
 
-// Extrai a URL base sem os parâmetros de consulta
-let connectionString = process.env.DATABASE_URL;
-const queryIndex = connectionString.indexOf('?');
-if (queryIndex !== -1) {
-    connectionString = connectionString.substring(0, queryIndex);
-}
-
-// Configuração SSL robusta para Aiven
+// Configuração SSL robusta para Aiven (resolve o erro self-signed certificate)
 const client = new Client({
-    connectionString: connectionString,
+    connectionString: process.env.DATABASE_URL,
     ssl: {
-        rejectUnauthorized: false, // Necessário para certificados autoassinados do Aiven
+        rejectUnauthorized: false  // Necessário para certificados autoassinados do Aiven
     }
 });
 
