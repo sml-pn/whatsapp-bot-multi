@@ -8,7 +8,7 @@ app.use(express.static('public'));
 const PORT = process.env.PORT || 3000;
 
 // ========== CONEXÃO COM POSTGRESQL (AIVEN) ==========
-// ⚠️ ATENÇÃO: A senha NÃO está no código! Use a variável DATABASE_URL no Render.
+// ⚠️ A senha NÃO está no código! Use a variável DATABASE_URL no Render.
 if (!process.env.DATABASE_URL) {
     console.error('❌ ERRO CRÍTICO: DATABASE_URL não configurada nas variáveis de ambiente!');
     console.error('   Configure a variável DATABASE_URL no Render com a string de conexão do Aiven.');
@@ -17,7 +17,7 @@ if (!process.env.DATABASE_URL) {
 
 const client = new Client({
     connectionString: process.env.DATABASE_URL,
-    ssl: { rejectUnauthorized: false }
+    ssl: true  // Corrigido: agora usa SSL confiável
 });
 
 async function initDB() {
@@ -342,7 +342,7 @@ app.post('/webhook/:empresaId', async (req, res) => {
         }
         
         await client.query(
-            'INSERT INTO conversas (entreprise_id, cliente, mensagens, status) VALUES ($1, $2, $3, $4)',
+            'INSERT INTO conversas (empresa_id, cliente, mensagens, status) VALUES ($1, $2, $3, $4)',
             [empresaId, from, JSON.stringify([{ role: 'user', content: texto }, { role: 'bot', content: resposta }]), 'active']
         );
         
