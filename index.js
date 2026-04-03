@@ -8,16 +8,25 @@ app.use(express.static('public'));
 const PORT = process.env.PORT || 3000;
 
 // ========== CONEXÃO COM POSTGRESQL (AIVEN) ==========
-// ⚠️ A senha NÃO está no código! Use a variável DATABASE_URL no Render.
 if (!process.env.DATABASE_URL) {
     console.error('❌ ERRO CRÍTICO: DATABASE_URL não configurada nas variáveis de ambiente!');
     console.error('   Configure a variável DATABASE_URL no Render com a string de conexão do Aiven.');
     process.exit(1);
 }
 
+// Extrai a URL base sem os parâmetros de consulta
+let connectionString = process.env.DATABASE_URL;
+const queryIndex = connectionString.indexOf('?');
+if (queryIndex !== -1) {
+    connectionString = connectionString.substring(0, queryIndex);
+}
+
+// Configuração SSL robusta para Aiven
 const client = new Client({
-    connectionString: process.env.DATABASE_URL,
-    ssl: true  // Corrigido: agora usa SSL confiável
+    connectionString: connectionString,
+    ssl: {
+        rejectUnauthorized: false, // Necessário para certificados autoassinados do Aiven
+    }
 });
 
 async function initDB() {
