@@ -14,12 +14,12 @@ if (!process.env.DATABASE_URL) {
     process.exit(1);
 }
 
-// Configuração SSL robusta para Aiven (resolve o erro self-signed certificate)
+// Configuração SSL correta para Aiven (resolve o erro self-signed certificate)
 const client = new Client({
     connectionString: process.env.DATABASE_URL,
     ssl: {
-        rejectUnauthorized: false  // Necessário para certificados autoassinados do Aiven
-    }
+        rejectUnauthorized: false,  // Necessário para certificados autoassinados do Aiven
+    },
 });
 
 async function initDB() {
