@@ -15,7 +15,7 @@ Plataforma para gerenciar múltiplas empresas no WhatsApp.
 3. Adicione a variável `DATABASE_URL`
 4. Deploy
 
-##fluxo completo
+## fluxo completo
 Cliente acessa sua página
     ↓
 Cadastra empresa (nome, telefone, e-mail)
